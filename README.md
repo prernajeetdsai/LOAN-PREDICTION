@@ -282,18 +282,19 @@ All features are **STABLE** — no significant drift detected.
 
 **Script:** `explain.py`  
 **MLflow run:** `shap_explainability_v1`  
-**Explainer:** `TreeExplainer` (300 test samples)
+**Explainer:** `TreeExplainer` (300 test samples)  
+**Metric logged:** Mean Absolute SHAP Value per feature
 
-### Global Feature Importance (Mean |SHAP|)
+### Global Feature Importance (Mean Absolute SHAP Value)
 
-| Rank | Feature | Mean |SHAP| |
-|---|---|---|
+| Rank | Feature | Mean Abs SHAP |
+|:---:|---|:---:|
 | 1 | Score_Source_2 | 0.3169 |
 | 2 | Score_Source_3 | 0.3120 |
 | 3 | Client_Gender_Female | 0.2444 |
-| 4 | Score_Source_1 | 0.1119 |
-| 5 | Credit_to_Annuity | 0.1052 |
-| 6 | Client_Gender_Male | 0.1336 |
+| 4 | Client_Gender_Male | 0.1336 |
+| 5 | Score_Source_1 | 0.1119 |
+| 6 | Credit_to_Annuity | 0.1052 |
 | 7 | Phone_Change | 0.0611 |
 | 8 | Car_Owned | 0.0664 |
 | 9 | Loan_Annuity | 0.0507 |
