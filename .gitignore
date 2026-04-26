@@ -1,0 +1,15 @@
+﻿# Python
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Model artifacts
+model.pkl
+preprocessor.pkl
+mlruns.db
+mlruns/
+
+# OS
+.DS_Store
+Thumbs.db
