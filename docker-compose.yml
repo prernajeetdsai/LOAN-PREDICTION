@@ -1,0 +1,63 @@
+version: "3.9"
+
+# ─── Loan Default Prediction — Docker Compose ────────────────────────────────
+#
+# Usage:
+#   docker compose up --build        # build + run everything
+#   docker compose up                # run with existing image
+#   docker compose down              # stop and remove containers
+#
+# Services:
+#   loan-predictor  — trains models, runs drift/SHAP, serves FastAPI on :8000
+#                     and MLflow UI on :5000.
+#
+# Volumes:
+#   mlruns_data  — persists the mlruns.db SQLite file between container restarts
+#                  so MLflow experiment history survives container stops.
+#   model_data   — persists model.pkl and preprocessor.pkl between restarts.
+#
+# Fixes applied:
+#   1. MLFLOW_TRACKING_URI changed from ./mlruns to sqlite:///mlruns.db to match
+#      the URI used in model.py, drift.py, and explain.py.
+#   2. model_data volume was mounted at /app (entire dir), which shadowed ALL
+#      image files (app.py, model.py, etc.) on first run when the volume is
+#      empty. Fixed: use named volumes at /app/mlruns_store and /app/saved_models
+#      so only persistence paths are affected.
+#
+# To use your own dataset instead of the baked-in one:
+#   Uncomment the ./data:/app/data volume mount below.
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  loan-predictor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: loan-default-predictor
+    ports:
+      - "8000:8000"   # FastAPI  → http://localhost:8000/docs
+      - "5000:5000"   # MLflow   → http://localhost:5000
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Fix: must match the URI used in model.py / drift.py / explain.py
+      - MLFLOW_TRACKING_URI=sqlite:///mlruns.db
+    volumes:
+      # Fix: do NOT mount to /app — that shadows all source files in the image.
+      # Mount only named volumes for persistence at dedicated sub-paths.
+      - mlruns_data:/app/mlruns_store
+      - model_data:/app/saved_models
+      # Uncomment to mount your own data (overrides baked-in dataset):
+      # - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s   # allow time for training to complete
+
+volumes:
+  mlruns_data:
+    driver: local
+  model_data:
+    driver: local

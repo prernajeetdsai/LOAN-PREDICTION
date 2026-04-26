@@ -1,0 +1,43 @@
+# Loan Default Prediction — Python dependencies
+#
+# Install: pip install -r requirements.txt
+#
+# Pins rationale:
+#   scikit-learn  >=1.4,<1.6  — keeps sparse_output= param stable
+#   imbalanced-learn >=0.12   — requires scikit-learn >=1.4
+#   numpy <2.0                — numpy 2.x breaks several downstream libs
+#   shap >=0.45               — TreeExplainer waterfall_plot support
+#   pydantic >=2.7            — v2 API used throughout (model_dump, model_config)
+#   mlflow >=2.16             — Model Registry + log_model API used
+
+# Core data science
+pandas>=2.1,<2.3
+numpy>=1.26,<2.0
+scipy>=1.13,<2.0
+
+# Machine learning
+scikit-learn>=1.4,<1.6
+imbalanced-learn>=0.12,<0.13
+
+# Experiment tracking
+mlflow>=2.16,<3.0
+
+# Explainability
+shap>=0.45,<0.48
+
+# API
+fastapi>=0.111,<0.120
+uvicorn[standard]>=0.30,<0.35
+pydantic>=2.7,<3.0
+
+# Utilities
+joblib>=1.4,<2.0
+matplotlib>=3.9,<4.0
+seaborn>=0.13,<0.14
+
+# Notebook
+jupyter>=1.0
+ipykernel>=6.29
+
+# Build
+setuptools>=68.0
